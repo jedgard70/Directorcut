@@ -23,7 +23,7 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
           alt="Cinematic Background"
           fill
           className="object-cover opacity-40"
-          referrerPolicy="no-referrer"
+          unoptimized
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none"></div>
       </div>
@@ -32,7 +32,7 @@ export function LoginView({ onLogin }: { onLogin: () => void }) {
         <div className="bg-surface-container-low/80 backdrop-blur-xl border border-outline-variant p-8 rounded-2xl shadow-2xl">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold tracking-tighter text-primary-fixed-dim uppercase mb-2">
-              Director&apos;s Cut
+              Director's Cut
             </h1>
             <p className="text-xs font-medium text-outline uppercase tracking-widest">
               Secure Workspace Authentication

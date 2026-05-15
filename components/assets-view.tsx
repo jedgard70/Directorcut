@@ -92,7 +92,7 @@ function AssetCard({ title, type, format, size, duration, badge, image, icon }: 
   return (
     <div className="group relative bg-surface-container-low border border-outline-variant rounded-lg overflow-hidden hover:border-outline cursor-pointer transition-all active:scale-[0.98]">
       <div className="aspect-video relative overflow-hidden bg-surface-dim">
-        <Image src={image} fill alt={title} className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" referrerPolicy="no-referrer"/>
+        <Image src={image} fill alt={title} className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" unoptimized/>
         
         {duration && (
           <div className="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 rounded text-[10px] font-bold text-primary-fixed-dim tracking-wider">

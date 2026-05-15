@@ -71,7 +71,7 @@ export function EditorView() {
           alt="Viewport"
           fill
           className="object-cover opacity-80"
-          referrerPolicy="no-referrer"
+          unoptimized
         />
         
         {/* Viewport Overlay */}
@@ -140,7 +140,7 @@ export function EditorView() {
                   onClick={() => setActiveSceneId(scene.id)}
                 >
                   <div className="w-24 h-16 relative rounded overflow-hidden flex-shrink-0 border border-outline-variant/50">
-                    <Image src={scene.thumbnail} alt={scene.name} fill className="object-cover" referrerPolicy="no-referrer" />
+                    <Image src={scene.thumbnail} alt={scene.name} fill className="object-cover" unoptimized />
                   </div>
                   <div className="flex-1 flex flex-col justify-center min-w-0">
                     <div className="flex justify-between items-start">

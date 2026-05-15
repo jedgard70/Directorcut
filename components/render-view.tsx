@@ -17,7 +17,7 @@ export function RenderView() {
     if (isRendering && jobId) {
       interval = setInterval(async () => {
         try {
-          const res = await fetch(`/api/job?jobId=${jobId}`);
+          const res = await fetch(`/api/render?jobId=${jobId}`);
           const data = await res.json();
           if (data.success && data.job) {
             setRenderProgress(data.job.progress);
@@ -40,7 +40,7 @@ export function RenderView() {
     setRenderProgress(0);
     setResultUrl(null);
     try {
-      const res = await fetch('/api/job', {
+      const res = await fetch('/api/render', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ samples, bounces, roughness })
@@ -66,7 +66,7 @@ export function RenderView() {
           alt="3D Render Viewport"
           fill
           className="object-cover transition-all duration-1000"
-          referrerPolicy="no-referrer"
+          unoptimized
         />
         {/* Gradient overlay to make text readable */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/80 pointer-events-none"></div>

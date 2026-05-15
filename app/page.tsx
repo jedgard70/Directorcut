@@ -27,7 +27,7 @@ export default function AppShell() {
       <header className="shrink-0 h-14 border-b border-outline-variant flex justify-between items-center px-4 bg-surface-container-low z-50">
         <div className="flex items-center gap-4">
           <h1 className="text-xl font-bold tracking-tighter text-primary-fixed-dim uppercase">
-            Director&apos;s Cut
+            Director's Cut
           </h1>
           {activeView !== 'dashboard' && (
             <div className="hidden sm:flex items-center gap-2 border-l border-outline-variant pl-4">
@@ -57,7 +57,7 @@ export default function AppShell() {
               alt="User" 
               fill 
               className="object-cover"
-              referrerPolicy="no-referrer"
+              unoptimized
             />
           </div>
         </div>

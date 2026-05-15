@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 
-export const dynamic = 'force-dynamic';
-
 // In-memory store for render jobs (simulating a database/queue)
 const renderJobs: Record<string, { status: string; progress: number; resultUrl?: string; settings?: any }> = {};
 
