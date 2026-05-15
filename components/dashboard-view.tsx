@@ -26,7 +26,7 @@ export function DashboardView() {
               alt="Cyberpunk Overdrive" 
               fill 
               className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-700 ease-out"
-              unoptimized
+              referrerPolicy="no-referrer"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
           </div>
@@ -83,7 +83,7 @@ function ProjectCard({ title, phase, progress, image }: { title: string, phase: 
   return (
     <div className="flex gap-4 p-3 bg-surface-container-low border border-outline-variant rounded hover:bg-surface-container hover:border-outline transition-all group cursor-pointer">
       <div className="w-20 h-20 sm:w-24 sm:h-24 rounded overflow-hidden relative flex-shrink-0 bg-surface">
-        <Image src={image} alt={title} fill className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out" unoptimized />
+        <Image src={image} alt={title} fill className="object-cover group-hover:scale-110 transition-transform duration-500 ease-out" referrerPolicy="no-referrer" />
       </div>
       <div className="flex flex-col justify-center flex-1">
         <div className="flex justify-between items-start">

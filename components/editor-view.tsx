@@ -7,17 +7,60 @@ type SceneType = {
   name: string;
   description: string;
   thumbnail: string;
+  dependsOn: string[];
 };
 
 export function EditorView() {
   const [activeTab, setActiveTab] = useState<'scenes' | 'layers' | 'ai' | 'properties'>('scenes');
   const [scenes, setScenes] = useState<SceneType[]>([
-    { id: '1', name: 'Intro Sequence_v04', description: 'Establishing shot of the cyberpunk city at night.', thumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLqI1fobD_rZsM4gcu8oKs3k9C-JUPP8AO-ongKOrFyqIA3p02D19g849PoNZVrz1PRbHlQm2XCN_RVMTeKGMZsQPXFxNUr0O5m1SFg6ZmTX3E0FbbhtxY29RhHHhOSs1inGB4uMj4Kr1uGBCyk_GIQtHVN6qWGX-VWxCEBxJOXsUDpUQawHp6OrKYyLOBmX0QnybQ56P12mjYX45dL9lzAP1hwEzGFVp7P7xKBlqQ9HAsEDBxnHKrbZYnEhAiJ5JBMuHVz-PnBYEN' },
-    { id: '2', name: 'Action Chase_v02', description: 'Drone pursuit through the narrow neon-lit alleys.', thumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQPr0WKUz-FBNAl1pR-oLz0SCPHTSk4NayOts_HX2bfEnra94SquoaWn0klfm5u9kXQTj2Gbd7-Qc3UOufHCO8Jc2UITZC8bQ-NPHxJNMCn1AxYJh9_uMSJIE1CLUL5S9FGF9WqvX2PTbfPziMIvFE6a26nsYY7hYNZY54KWdRcHXwmL-777Ms_BdXNmMvxE8XA31_YYJogANQFhsM3J2xnitC_5e9vXVGn4XhM4u_YRykNmAYdKUrHi5xiSPDsB55c08sOtxqfBsL' },
+    { id: '1', name: 'Intro Sequence_v04', description: 'Establishing shot of the cyberpunk city at night.', thumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLqI1fobD_rZsM4gcu8oKs3k9C-JUPP8AO-ongKOrFyqIA3p02D19g849PoNZVrz1PRbHlQm2XCN_RVMTeKGMZsQPXFxNUr0O5m1SFg6ZmTX3E0FbbhtxY29RhHHhOSs1inGB4uMj4Kr1uGBCyk_GIQtHVN6qWGX-VWxCEBxJOXsUDpUQawHp6OrKYyLOBmX0QnybQ56P12mjYX45dL9lzAP1hwEzGFVp7P7xKBlqQ9HAsEDBxnHKrbZYnEhAiJ5JBMuHVz-PnBYEN', dependsOn: [] },
+    { id: '2', name: 'Action Chase_v02', description: 'Drone pursuit through the narrow neon-lit alleys.', thumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQPr0WKUz-FBNAl1pR-oLz0SCPHTSk4NayOts_HX2bfEnra94SquoaWn0klfm5u9kXQTj2Gbd7-Qc3UOufHCO8Jc2UITZC8bQ-NPHxJNMCn1AxYJh9_uMSJIE1CLUL5S9FGF9WqvX2PTbfPziMIvFE6a26nsYY7hYNZY54KWdRcHXwmL-777Ms_BdXNmMvxE8XA31_YYJogANQFhsM3J2xnitC_5e9vXVGn4XhM4u_YRykNmAYdKUrHi5xiSPDsB55c08sOtxqfBsL', dependsOn: ['1'] },
   ]);
   const [activeSceneId, setActiveSceneId] = useState('1');
+  const [draggedSceneId, setDraggedSceneId] = useState<string | null>(null);
+  const [dragOverSceneId, setDragOverSceneId] = useState<string | null>(null);
 
   const activeScene = scenes.find(s => s.id === activeSceneId) || scenes[0];
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedSceneId(id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (id !== draggedSceneId) {
+      setDragOverSceneId(id);
+    }
+  };
+
+  const handleDragLeave = () => {
+    setDragOverSceneId(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    setDragOverSceneId(null);
+    
+    if (draggedSceneId && draggedSceneId !== targetId) {
+      const draggedIndex = scenes.findIndex(s => s.id === draggedSceneId);
+      const dropIndex = scenes.findIndex(s => s.id === targetId);
+      
+      if (draggedIndex !== -1 && dropIndex !== -1) {
+        const newScenes = [...scenes];
+        const [draggedScene] = newScenes.splice(draggedIndex, 1);
+        newScenes.splice(dropIndex, 0, draggedScene);
+        setScenes(newScenes);
+      }
+    }
+    setDraggedSceneId(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedSceneId(null);
+    setDragOverSceneId(null);
+  };
 
   return (
     <div className="flex flex-col h-full bg-surface-container-lowest">
@@ -28,7 +71,7 @@ export function EditorView() {
           alt="Viewport"
           fill
           className="object-cover opacity-80"
-          unoptimized
+          referrerPolicy="no-referrer"
         />
         
         {/* Viewport Overlay */}
@@ -75,7 +118,7 @@ export function EditorView() {
                 <span className="text-xs font-bold text-outline uppercase tracking-widest">Project Scenes</span>
                 <button 
                   onClick={() => {
-                    setScenes([...scenes, { id: Date.now().toString(), name: 'New Scene', description: 'Describe your scene here.', thumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLqI1fobD_rZsM4gcu8oKs3k9C-JUPP8AO-ongKOrFyqIA3p02D19g849PoNZVrz1PRbHlQm2XCN_RVMTeKGMZsQPXFxNUr0O5m1SFg6ZmTX3E0FbbhtxY29RhHHhOSs1inGB4uMj4Kr1uGBCyk_GIQtHVN6qWGX-VWxCEBxJOXsUDpUQawHp6OrKYyLOBmX0QnybQ56P12mjYX45dL9lzAP1hwEzGFVp7P7xKBlqQ9HAsEDBxnHKrbZYnEhAiJ5JBMuHVz-PnBYEN' }]);
+                    setScenes([...scenes, { id: Date.now().toString(), name: 'New Scene', description: 'Describe your scene here.', thumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCLqI1fobD_rZsM4gcu8oKs3k9C-JUPP8AO-ongKOrFyqIA3p02D19g849PoNZVrz1PRbHlQm2XCN_RVMTeKGMZsQPXFxNUr0O5m1SFg6ZmTX3E0FbbhtxY29RhHHhOSs1inGB4uMj4Kr1uGBCyk_GIQtHVN6qWGX-VWxCEBxJOXsUDpUQawHp6OrKYyLOBmX0QnybQ56P12mjYX45dL9lzAP1hwEzGFVp7P7xKBlqQ9HAsEDBxnHKrbZYnEhAiJ5JBMuHVz-PnBYEN', dependsOn: [] }]);
                   }}
                   className="text-primary-fixed-dim hover:text-primary flex items-center gap-1 text-xs font-bold transition-colors"
                 >
@@ -85,11 +128,19 @@ export function EditorView() {
               {scenes.map(scene => (
                 <div 
                   key={scene.id} 
-                  className={`flex gap-3 p-3 rounded-lg border transition-all cursor-pointer ${activeSceneId === scene.id ? 'bg-primary-container/10 border-primary-fixed-dim/50' : 'bg-surface-container-low border-outline-variant hover:border-outline'}`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, scene.id)}
+                  onDragOver={(e) => handleDragOver(e, scene.id)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, scene.id)}
+                  onDragEnd={handleDragEnd}
+                  className={`flex gap-3 p-3 rounded-lg border transition-all cursor-pointer ${
+                    activeSceneId === scene.id ? 'bg-primary-container/10 border-primary-fixed-dim/50' : 'bg-surface-container-low border-outline-variant hover:border-outline'
+                  } ${draggedSceneId === scene.id ? 'opacity-50 scale-[0.98]' : ''} ${dragOverSceneId === scene.id ? 'border-primary-fixed-dim bg-primary/5' : ''}`}
                   onClick={() => setActiveSceneId(scene.id)}
                 >
                   <div className="w-24 h-16 relative rounded overflow-hidden flex-shrink-0 border border-outline-variant/50">
-                    <Image src={scene.thumbnail} alt={scene.name} fill className="object-cover" unoptimized />
+                    <Image src={scene.thumbnail} alt={scene.name} fill className="object-cover" referrerPolicy="no-referrer" />
                   </div>
                   <div className="flex-1 flex flex-col justify-center min-w-0">
                     <div className="flex justify-between items-start">
@@ -115,6 +166,42 @@ export function EditorView() {
                        onClick={(e) => e.stopPropagation()}
                        className="text-xs text-on-surface-variant bg-transparent outline-none truncate w-full mt-1 border-b border-transparent focus:border-outline-variant/50"
                     />
+                    <div className="mt-2 flex flex-wrap gap-1 items-center">
+                      {scene.dependsOn.length > 0 && <span className="text-[10px] text-outline uppercase tracking-wider font-bold mr-1">Depends on:</span>}
+                      {scene.dependsOn.map(depId => {
+                        const depScene = scenes.find(s => s.id === depId);
+                        return depScene ? (
+                          <div key={depId} className="flex items-center gap-1 bg-surface-container-highest border border-outline-variant px-1.5 py-0.5 rounded text-[10px] text-on-surface-variant group">
+                            <span className="truncate max-w-[80px]">{depScene.name}</span>
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setScenes(scenes.map(s => s.id === scene.id ? { ...s, dependsOn: s.dependsOn.filter(d => d !== depId) } : s));
+                              }}
+                              className="opacity-50 hover:opacity-100 hover:text-error transition-opacity"
+                            >
+                               &times;
+                            </button>
+                          </div>
+                        ) : null;
+                      })}
+                      <select 
+                        className="text-[10px] bg-transparent text-primary-fixed-dim outline-none border border-dashed border-primary-fixed-dim/30 rounded px-1 py-0.5 cursor-pointer max-w-[100px] hover:bg-primary/5 transition-colors"
+                        value=""
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => {
+                          const newDepId = e.target.value;
+                          if (newDepId && !scene.dependsOn.includes(newDepId)) {
+                             setScenes(scenes.map(s => s.id === scene.id ? { ...s, dependsOn: [...s.dependsOn, newDepId] } : s));
+                          }
+                        }}
+                      >
+                         <option value="" disabled>+ Link</option>
+                         {scenes.filter(s => s.id !== scene.id && !scene.dependsOn.includes(s.id)).map(s => (
+                           <option key={s.id} value={s.id} className="text-on-surface bg-surface-container">{s.name}</option>
+                         ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
               ))}

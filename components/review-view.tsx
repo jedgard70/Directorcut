@@ -12,7 +12,7 @@ export function ReviewView() {
           alt="Video Frame"
           fill
           className="object-cover opacity-80"
-          unoptimized
+          referrerPolicy="no-referrer"
         />
         
         {/* Play Button Overlay */}
@@ -100,7 +100,7 @@ function CommentCard({ author, time, timestamp, content, likes, avatar, attachme
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full border border-outline-variant overflow-hidden relative bg-surface">
             {avatar ? (
-              <Image src={avatar} alt={author} fill className="object-cover" unoptimized/>
+              <Image src={avatar} alt={author} fill className="object-cover" referrerPolicy="no-referrer"/>
             ) : (
               <div className="w-full h-full flex items-center justify-center font-bold text-xs bg-secondary/20 text-secondary">{author.substring(0,2)}</div>
             )}

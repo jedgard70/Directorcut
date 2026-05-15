@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Film, Cuboid, FolderOpen, MessageSquareText, Search, Settings } from 'lucide-react';
+import { LayoutDashboard, Film, Cuboid, FolderOpen, MessageSquareText, Search, Settings, LogOut } from 'lucide-react';
 import Image from 'next/image';
 
 import { DashboardView } from '@/components/dashboard-view';
@@ -9,11 +9,17 @@ import { EditorView } from '@/components/editor-view';
 import { RenderView } from '@/components/render-view';
 import { AssetsView } from '@/components/assets-view';
 import { ReviewView } from '@/components/review-view';
+import { LoginView } from '@/components/login-view';
 
 type ViewType = 'dashboard' | 'editor' | 'render' | 'assets' | 'review';
 
 export default function AppShell() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [activeView, setActiveView] = useState<ViewType>('dashboard');
+
+  if (!isAuthenticated) {
+    return <LoginView onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   return (
     <div className="flex flex-col h-screen bg-background text-on-surface overflow-hidden">
@@ -21,7 +27,7 @@ export default function AppShell() {
       <header className="shrink-0 h-14 border-b border-outline-variant flex justify-between items-center px-4 bg-surface-container-low z-50">
         <div className="flex items-center gap-4">
           <h1 className="text-xl font-bold tracking-tighter text-primary-fixed-dim uppercase">
-            Director's Cut
+            Director&apos;s Cut
           </h1>
           {activeView !== 'dashboard' && (
             <div className="hidden sm:flex items-center gap-2 border-l border-outline-variant pl-4">
@@ -38,13 +44,20 @@ export default function AppShell() {
           <button className="text-on-surface-variant hover:text-primary transition-colors">
             <Settings className="w-5 h-5" />
           </button>
-          <div className="w-8 h-8 rounded-full border border-outline-variant overflow-hidden relative">
+          <button 
+            onClick={() => setIsAuthenticated(false)}
+            className="text-on-surface-variant hover:text-error transition-colors ml-2"
+            title="Logout"
+          >
+            <LogOut className="w-5 h-5" />
+          </button>
+          <div className="w-8 h-8 rounded-full border border-outline-variant overflow-hidden relative ml-2">
             <Image 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY3xG6zsBlV2Pm8eWG-lqYlnlFqA1hm0RRXvoDT5jPlBkH-aMeSwwtTHET66WKWryKI_Lk_xCDZhotx3JHGAJAOS2ymsWG7mFuPp6KaOVOdjGWPzz2G0F4VUlS9QqqBmCOAdM2VB54ZDemIebHWUlEz0AD-d2xYN1YF6uPgjZRu9_KuBWWpUeNc9cw-MsBSalKb2ut8lLBt4Yr1eW5eA4IgRHDl7WvgfdyvWrDHvy1w85ZuJ6OQfkv8w-pTWnBXbVTaW5v4nlF-4Mt" 
               alt="User" 
               fill 
               className="object-cover"
-              unoptimized
+              referrerPolicy="no-referrer"
             />
           </div>
         </div>
